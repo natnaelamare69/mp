@@ -1,0 +1,47 @@
+tkinter and vlc apis 
+
+first derivable
+
+-add folder 
+ -play
+ -pause
+ -shuffle 
+ -forward and backward
+ -volume 
+ -time: current time and end time
+
+def load_music(): done
+def play_music(): done 
+def pause_music(): done 
+def shuffle(): done shuffle shouldnt truley be random it should keep track of what songs already played and attempt to not play them again 
+def next(): done
+def previous(): done
+def increase_volume():
+def decrease_volume():
+def display_time():
+def check_music_end(): 
+
+second deliverable 
+ -song metadata mentioned in the other notes
+ -add to playlist and add to liked lists 
+
+ gradient background 
+ custom buttons and icons with animations 
+
+
+ custom icons list 
+ home 
+ next 
+ previous 
+ library
+ playlists 
+ liked songes
+ albums 
+ folders 
+ podcasts 
+ audiobooks 
+ artists  
+ shuffle and loop 
+download manager 
+progress bar  
+song radio button  

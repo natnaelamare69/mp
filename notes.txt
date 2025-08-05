@@ -1,0 +1,32 @@
+requirements 
+- add playlist folders 
+- remembers previously added playlists, songs  hint: json, read, save
+- browse through the playlists using songboxes 
+- VLC api-s 
+- some basic level of gui implementation 
+
+
+vlc apis 
+
+basic functions: 
+Load/play/pause/stop media
+Load files or URLs
+Get current time, duration
+Control volume, mute, loop
+Set fullscreen / windowed mode
+
+Audio modules:
+Adjust volume
+Mute/unmute
+Choose audio track
+Equalizer support #this maybe later 
+
+Playback control:
+Playlists and media lists
+Speed control (faster/slower)
+Seeking (jump to specific time)
+
+metadata and info: 
+Title, artist, duration
+Track count
+audio track info
