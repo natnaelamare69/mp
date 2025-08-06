@@ -25,7 +25,8 @@ auto next: done
 
 
 second deliverable 
-import/ export playlists 
+import/ export playlists  entries = os.scandir('my_directory/')
+
 create/edit/delete playlists 
 different kinds of folders: downloads, liked songs, playlists, albums 
 add songs to playlists and liked songs 
@@ -62,3 +63,16 @@ third deliverable
 download manager 
 progress bar  
 song radio button  : ai 
+
+add into json previously added directories  
+read from json name a lisbox element by the name of the folder  
+
+
+crud folders
+- created 
+- edit 
+- delete 
+- save folders 
+
+
+later folders in folders 

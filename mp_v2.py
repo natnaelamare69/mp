@@ -4,6 +4,7 @@ import ctypes
 import os 
 import random
 import requests
+import json
 from tkinter import * 
 from tkinter import filedialog, Tk, Menu, Listbox, Button, Frame, PhotoImage, END 
 
@@ -16,6 +17,7 @@ app.config(menu= menu_bar)
 
 player = vlc.MediaPlayer()
 
+directories = "directories.json"
 
 #global variables 
 folder = []
@@ -26,6 +28,10 @@ is_paused = False
 def load_music():
     global current_song
     app.directory = filedialog.askdirectory()
+    if not app.directory:
+        return
+    
+    saves_folders_path(app.directory)
 
 
     folder.clear() # this is gonna be replaced; json to read and write and remember previously added playlists 
@@ -43,6 +49,23 @@ def load_music():
     if folder: 
         song_listbox.selection_set(0)
         current_song = folder[song_listbox.curselection()[0]]
+
+def load_directories_path():      
+    if not os.path.exists(directories):
+        return []
+    try:
+        with open (directories, "r") as f:
+            return json.load(f)
+    except json.JSONDecodeError:
+        return []
+# get directory and save it to json 
+def saves_folders_path(path):  # 🔧 Accept the path
+    folders_list = load_directories_path()
+    if path not in folders_list:
+        folders_list.append(path)
+    with open(directories, "w") as f:
+        json.dump(folders_list, f)
+
 
 #play music
 def play_music(event=None):
@@ -169,8 +192,8 @@ def display_time():
             print("...")
 
     app.after(1000, display_time) 
-        
 
+    
 #menu elements 
 add_folder_menu = Menu(menu_bar, tearoff=FALSE)
 add_folder_menu.add_command(label='select folder', command=load_music)
@@ -213,5 +236,7 @@ volume_increase_button.pack()
 #volume decrease button
 volume_decrease_button = Button(control_frame, text = "volume--", command = volume_decrease)
 volume_decrease_button.pack()
+
+
 check_music_end()
 app.mainloop()
