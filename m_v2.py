@@ -123,9 +123,39 @@ def shuffle(event=None):
         play_music()
     except:
         pass
-        
+
+#volume increase 
+def volume_increase():
+    global player, volume_level, new_volume
+    try: 
+        volume_level = player.audio_get_volume()
+        new_volume = min(volume_level+10, 100)
+        player.audio_set_volume(new_volume)
+        print(volume_level, new_volume)
+    except:
+        pass
+#volume decrease 
+def volume_decrease():
+    global player, volume_level, new_volume
+    try:
+        volume_level = player.audio_get_volume()
+        new_volume = max(volume_level-10, 0)
+        player.audio_set_volume(new_volume)
+        print(volume_level, new_volume)
+    except:
+        pass
+#display current time and display remaining time 
+def display_time():
     
 
+
+
+
+
+
+
+
+    
 #menu elements 
 add_folder_menu = Menu(menu_bar, tearoff=FALSE)
 add_folder_menu.add_command(label='select folder', command=load_music)
@@ -160,5 +190,13 @@ previous_button.pack()
 #shuffle button
 shuffle_button = Button(control_frame, text = "shuffle", command = shuffle)
 shuffle_button.pack()
+
+#volume increase button
+volume_increase_button = Button(control_frame, text = "volume++", command = volume_increase)
+volume_increase_button.pack()
+
+#volume decrease button
+volume_decrease_button = Button(control_frame, text = "volume--", command = volume_decrease)
+volume_decrease_button.pack()
 
 app.mainloop()

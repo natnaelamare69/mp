@@ -13,13 +13,17 @@ first derivable
 def load_music(): done
 def play_music(): done 
 def pause_music(): done 
-def shuffle(): done shuffle shouldnt truley be random it should keep track of what songs already played and attempt to not play them again 
+def shuffle(): today shuffle shouldnt truley be random it should keep track of what songs already played and attempt to not play them again 
 def next(): done
 def previous(): done
-def increase_volume():
-def decrease_volume():
-def display_time():
-def check_music_end(): 
+def check_music_end(): done 
+
+def increase_volume(): done
+def decrease_volume(): done
+def display_time():today
+
+
+auto next 
 
 second deliverable 
  -song metadata mentioned in the other notes
