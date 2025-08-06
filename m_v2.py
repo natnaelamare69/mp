@@ -1,4 +1,5 @@
 import vlc 
+import time
 import ctypes
 import os 
 import random
@@ -63,7 +64,7 @@ def check_music_end():
     global player
     if not player.is_playing()and not is_paused and folder:
         next_song()
-    app.after(50, check_music_end)
+    app.after(100, check_music_end)
 
 #pause 
 def pause_music(event=None):
@@ -146,16 +147,19 @@ def volume_decrease():
         pass
 #display current time and display remaining time 
 def display_time():
-    
+    global player, current_song, current_time, length
+    length = player.get_length()
+    current_time = player.get_time()
+    cm = current_time // 60000
+    cs = (current_time % 60000) // 1000
+    lm  = length // 60000
+    ls = (length % 60000) // 1000
+    print(cm,cs, "/", lm, ls)
+    app.after(1000, display_time)
+
+display_time()
 
 
-
-
-
-
-
-
-    
 #menu elements 
 add_folder_menu = Menu(menu_bar, tearoff=FALSE)
 add_folder_menu.add_command(label='select folder', command=load_music)

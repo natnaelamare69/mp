@@ -20,7 +20,8 @@ def check_music_end(): done
 
 def increase_volume(): done
 def decrease_volume(): done
-def display_time():today
+def display_time(): done
+01:00/05:00
 
 
 auto next 
