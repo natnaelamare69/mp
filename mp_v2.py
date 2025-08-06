@@ -94,19 +94,19 @@ def play_music(event=None):
         player.set_media(vlc.Media(current_song))
         player.play()
     display_time()
-
+#auto next 
 def check_music_end():
     if not player.is_playing() and not is_paused and folder:
         next_song()
     app.after(100, check_music_end)
-
+#pause 
 def pause_music(event=None):
     global is_paused
     if not folder:
         return
     player.pause()
     is_paused = not is_paused
-
+#next 
 def next_song(event=None):
     global current_song
     if not folder:
@@ -120,7 +120,7 @@ def next_song(event=None):
         play_music()
     except Exception as e:
         print("error in next_song:", e)
-
+#prev
 def previous_song(event=None):
     global current_song
     if not folder:
@@ -134,7 +134,7 @@ def previous_song(event=None):
         play_music()
     except Exception as e:
         print("error in previous_song:", e)
-
+#shuffle 
 def shuffle(event=None):
     global current_song
     if not folder:
@@ -148,7 +148,8 @@ def shuffle(event=None):
         play_music()
     except:
         pass
-
+#volume controls 
+#volume increase
 def volume_increase():
     try:
         volume_level = player.audio_get_volume()
@@ -157,7 +158,7 @@ def volume_increase():
         print(volume_level, new_volume)
     except:
         pass
-
+#volume decrease
 def volume_decrease():
     try:
         volume_level = player.audio_get_volume()
@@ -166,7 +167,9 @@ def volume_decrease():
         print(volume_level, new_volume)
     except:
         pass
-
+# display current time and length
+# currently only prints into terminal cause there is a bug 
+# in the future in to the UI elements 
 def display_time():
     if not is_paused:
         length = player.get_length()
@@ -181,6 +184,7 @@ def display_time():
             print("...")
     app.after(1000, display_time)
 
+#mostly used ai for below 
 # Menu
 add_folder_menu = Menu(menu_bar, tearoff=False)
 add_folder_menu.add_command(label='Select folder', command=load_music)

@@ -62,12 +62,12 @@ third deliverable
  shuffle and loop 
 download manager 
 progress bar  
-song radio button  : ai 
+song radio button  : ai suggestions
 
-add into json previously added directories  
-read from json name a lisbox element by the name of the folder  
+add into json previously added directories : done 
+read from json name a lisbox element by the name of the folder: done   
 
-
+updating is not dynamic: currently i had to restart the app to load the added folders 
 crud folders
 - created 
 - edit 
