@@ -1,2 +1,0 @@
-widgets = gui elements: buttons, textboxes, labels, images 
-windows = container to hold these widgets 
