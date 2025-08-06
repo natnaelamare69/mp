@@ -21,18 +21,26 @@ def check_music_end(): done
 def increase_volume(): done
 def decrease_volume(): done
 def display_time(): done
-01:00/05:00
 auto next: done 
 
 
 second deliverable 
-add multiple playlists and remember them 
+import/ export playlists 
+create/edit/delete playlists 
+different kinds of folders: downloads, liked songs, playlists, albums 
+add songs to playlists and liked songs 
 select between playlists 
+volume normalization 
+id3 tags?: media information 
+background play 
 
-
- deliverable 
- -song metadata mentioned in the other notes
- -add to playlist and add to liked lists 
+third deliverable 
+ - song metadata mentioned in the other notes
+ - add to playlist and add to liked lists 
+ - search for songs 
+ - crossfade? 
+ - seek bar 
+ 
 
  gradient background 
  custom buttons and icons with animations 
@@ -53,4 +61,4 @@ select between playlists
  shuffle and loop 
 download manager 
 progress bar  
-song radio button  
+song radio button  : ai 
