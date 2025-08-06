@@ -76,3 +76,6 @@ crud folders
 
 
 later folders in folders 
+
+
+it is getting painful to work with this i need better file structure 

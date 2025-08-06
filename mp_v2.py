@@ -1,187 +1,176 @@
-import vlc 
-import time
-import ctypes
-import os 
+import vlc
+import os
 import random
-import requests
 import json
-from tkinter import * 
-from tkinter import filedialog, Tk, Menu, Listbox, Button, Frame, PhotoImage, END 
+from tkinter import Tk,Listbox, Button, Frame, filedialog, Menu, END
+
 
 app = Tk()
 app.title('mp_v2')
-app.geometry ("500x500")
+app.geometry("500x300")
 app.config(background="#1e1e1e")
 menu_bar = Menu(app)
-app.config(menu= menu_bar)
+app.config(menu=menu_bar)
 
 player = vlc.MediaPlayer()
-
 directories = "directories.json"
 
-#global variables 
+# Global variables
 folder = []
 current_song = ""
 is_paused = False
 
-#load folder
+# Load folder
 def load_music():
     global current_song
     app.directory = filedialog.askdirectory()
     if not app.directory:
         return
-    
     saves_folders_path(app.directory)
-
-
-    folder.clear() # this is gonna be replaced; json to read and write and remember previously added playlists 
+    folder.clear()
     song_listbox.delete(0, END)
-
-    for file in os.listdir(app.directory): #loads from folder to internal folder 
-        name, ext = os.path.splitext(file) 
+    for file in os.listdir(app.directory):
+        name, ext = os.path.splitext(file)
         if ext == '.mp3':
             folder.append(file)
-    #load all songs in the internal folder into the listbox: is a simple ui to show list of songs 
     for song in folder:
-        song_listbox.insert("end", song) 
-
-    #the first song from the listbox 
-    if folder: 
+        song_listbox.insert(END, song)
+    if folder:
         song_listbox.selection_set(0)
         current_song = folder[song_listbox.curselection()[0]]
 
-def load_directories_path():      
+# Choose folder from saved directories
+def choose_folders(event):
+    global folder, current_song
+    folder_list = load_directories_path()
+    selection = folder_listbox.curselection()
+    if not selection:
+        return
+    index = selection[0]
+    selected_folder = folder_list[index]
+    app.directory = selected_folder
+    folder.clear()
+    song_listbox.delete(0, END)
+    for file in os.listdir(selected_folder):
+        name, ext = os.path.splitext(file)
+        if ext == '.mp3':
+            folder.append(file)
+    for song in folder:
+        song_listbox.insert(END, song)
+    if folder:
+        song_listbox.selection_set(0)
+        current_song = os.path.join(app.directory, folder[0])
+    song_listbox.pack()
+
+def load_directories_path():
     if not os.path.exists(directories):
         return []
     try:
-        with open (directories, "r") as f:
+        with open(directories, "r") as f:
             return json.load(f)
     except json.JSONDecodeError:
         return []
-# get directory and save it to json 
-def saves_folders_path(path):  # 🔧 Accept the path
+
+def saves_folders_path(path):
     folders_list = load_directories_path()
     if path not in folders_list:
         folders_list.append(path)
     with open(directories, "w") as f:
         json.dump(folders_list, f)
 
-
-#play music
+# Music controls
 def play_music(event=None):
     global current_song, is_paused, player
-
     if not folder:
         return
-
     selection_index = song_listbox.curselection()
     if selection_index:
-        selected_filename = folder[selection_index[0]] 
+        selected_filename = folder[selection_index[0]]
         current_song = os.path.join(app.directory, selected_filename)
     if is_paused:
         player.play()
         is_paused = False
-    else: 
+    else:
         player.set_media(vlc.Media(current_song))
         player.play()
-
     display_time()
-      
 
-#check if music ended
 def check_music_end():
-    global player
     if not player.is_playing() and not is_paused and folder:
         next_song()
     app.after(100, check_music_end)
 
-#pause 
 def pause_music(event=None):
-    global current_song, is_paused, player
+    global is_paused
     if not folder:
         return
     player.pause()
-    is_paused = not is_paused   
+    is_paused = not is_paused
 
-#next
 def next_song(event=None):
-    global current_song, is_paused, selected_filename, next_index
+    global current_song
     if not folder:
         return
     try:
-        song_listbox.selection_clear(0,END)
-        next_index = (folder.index(os.path.basename(current_song))+1)% len(folder)
+        song_listbox.selection_clear(0, END)
+        next_index = (folder.index(os.path.basename(current_song)) + 1) % len(folder)
         song_listbox.selection_set(next_index)
-        selected_filename = folder[next_index]
-        current_song = os.path.join(app.directory, selected_filename)
-        
+        current_song = os.path.join(app.directory, folder[next_index])
         is_paused = False
-        play_music()    
+        play_music()
     except Exception as e:
         print("error in next_song:", e)
 
-#previous
 def previous_song(event=None):
-    global current_song, is_paused, selected_filename, previous_index
+    global current_song
     if not folder:
         return
     try:
-        song_listbox.selection_clear(0,END)
-        previous_index = (folder.index(os.path.basename(current_song))-1)% len(folder)
+        song_listbox.selection_clear(0, END)
+        previous_index = (folder.index(os.path.basename(current_song)) - 1) % len(folder)
         song_listbox.selection_set(previous_index)
-        selected_filename = folder[previous_index]
-        current_song = os.path.join(app.directory, selected_filename)
-        
+        current_song = os.path.join(app.directory, folder[previous_index])
         is_paused = False
-        play_music()    
+        play_music()
     except Exception as e:
         print("error in previous_song:", e)
 
-#shuffle 
 def shuffle(event=None):
-    global current_song, is_paused, selected_filename, previous_index
+    global current_song
     if not folder:
         return
     try:
-        song_listbox.selection_clear(0,END)
-        shuffled_index = (folder.index(os.path.basename((random.choice(folder)))))
+        song_listbox.selection_clear(0, END)
+        shuffled_index = folder.index(os.path.basename(random.choice(folder)))
         song_listbox.selection_set(shuffled_index)
-        selected_filename = folder[shuffled_index]
-        current_song = os.path.join(app.directory, selected_filename)
-
+        current_song = os.path.join(app.directory, folder[shuffled_index])
         is_paused = False
         play_music()
     except:
         pass
 
-#volume increase 
 def volume_increase():
-    global player, volume_level, new_volume
-    try: 
-        volume_level = player.audio_get_volume()
-        new_volume = min(volume_level+10, 100)
-        player.audio_set_volume(new_volume)
-        print(volume_level, new_volume)
-    except:
-        pass
-#volume decrease 
-def volume_decrease():
-    global player, volume_level, new_volume
     try:
         volume_level = player.audio_get_volume()
-        new_volume = max(volume_level-10, 0)
+        new_volume = min(volume_level + 10, 100)
         player.audio_set_volume(new_volume)
         print(volume_level, new_volume)
     except:
         pass
-#display current time and display remaining time 
-def display_time():
-    global player, is_paused
 
+def volume_decrease():
+    try:
+        volume_level = player.audio_get_volume()
+        new_volume = max(volume_level - 10, 0)
+        player.audio_set_volume(new_volume)
+        print(volume_level, new_volume)
+    except:
+        pass
+
+def display_time():
     if not is_paused:
         length = player.get_length()
         current_time = player.get_time()
-
         if length > 0 and current_time >= 0:
             cm = current_time // 60000
             cs = (current_time % 60000) // 1000
@@ -190,53 +179,41 @@ def display_time():
             print(f"{cm}:{cs:02d} / {lm}:{ls:02d}")
         else:
             print("...")
+    app.after(1000, display_time)
 
-    app.after(1000, display_time) 
+# Menu
+add_folder_menu = Menu(menu_bar, tearoff=False)
+add_folder_menu.add_command(label='Select folder', command=load_music)
+menu_bar.add_cascade(label='Add folder', menu=add_folder_menu)
 
-    
-#menu elements 
-add_folder_menu = Menu(menu_bar, tearoff=FALSE)
-add_folder_menu.add_command(label='select folder', command=load_music)
-menu_bar.add_cascade(label='add folder', menu= add_folder_menu)
+# Folder listbox
+folder_listbox = Listbox(app, bg="black", fg="white", width=100, height=5)
+folder_listbox.pack()
+saved_folders = load_directories_path()
+for folder_path in saved_folders:
+    folder_listbox.insert(END, os.path.basename(folder_path))
+folder_listbox.bind("<<ListboxSelect>>", choose_folders)
 
-#temp lisbox to hold elements 
-song_listbox = Listbox(app, bg ="black", fg="white", width= 100, height=13)
-song_listbox.pack()
-
-#selection event for the listbox 
+# Song listbox (hidden initially)
+song_listbox = Listbox(app, bg="black", fg="white", width=100, height=13)
 song_listbox.bind("<<ListboxSelect>>", play_music)
 
-#playbutton 
-control_frame = Frame(app)
-control_frame.pack()
+# Control buttons in a single row at bottom
+control_frame = Frame(app, bg="black")
+control_frame.pack(side="bottom", pady=10)
 
-play_button = Button(control_frame, text="play", command=play_music)
-play_button.pack()
+buttons = [
+    ("Shuffle", shuffle),
+    ("Previous", previous_song),
+    ("Play", play_music),
+    ("Pause", pause_music),
+    ("Next", next_song),
+    ("Vol -", volume_decrease),
+    ("Vol +", volume_increase)
+]
 
-#pause button
-pause_button = Button(control_frame, text = "pause", command=pause_music)
-pause_button.pack()
-
-#next button
-next_button = Button(control_frame, text = "next", command=next_song)
-next_button.pack()
-
-#previouse button
-previous_button = Button(control_frame, text = "previous", command = previous_song)
-previous_button.pack()
-
-#shuffle button
-shuffle_button = Button(control_frame, text = "shuffle", command = shuffle)
-shuffle_button.pack()
-
-#volume increase button
-volume_increase_button = Button(control_frame, text = "volume++", command = volume_increase)
-volume_increase_button.pack()
-
-#volume decrease button
-volume_decrease_button = Button(control_frame, text = "volume--", command = volume_decrease)
-volume_decrease_button.pack()
-
+for text, cmd in buttons:
+    Button(control_frame, text=text, command=cmd).pack(side="left", padx=5)
 
 check_music_end()
 app.mainloop()
