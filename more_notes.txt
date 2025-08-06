@@ -1,6 +1,6 @@
 tkinter and vlc apis 
 
-first derivable
+first derivable: done
 
 -add folder 
  -play
@@ -22,11 +22,15 @@ def increase_volume(): done
 def decrease_volume(): done
 def display_time(): done
 01:00/05:00
+auto next: done 
 
-
-auto next 
 
 second deliverable 
+add multiple playlists and remember them 
+select between playlists 
+
+
+ deliverable 
  -song metadata mentioned in the other notes
  -add to playlist and add to liked lists 
 

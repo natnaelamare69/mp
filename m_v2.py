@@ -59,6 +59,9 @@ def play_music(event=None):
     if not is_paused: 
         player.set_media(vlc.Media(current_song))
         player.play()
+        display_time()
+      
+
 #check if music ended
 def check_music_end():
     global player
@@ -148,17 +151,15 @@ def volume_decrease():
 #display current time and display remaining time 
 def display_time():
     global player, current_song, current_time, length
-    length = player.get_length()
-    current_time = player.get_time()
-    cm = current_time // 60000
-    cs = (current_time % 60000) // 1000
-    lm  = length // 60000
-    ls = (length % 60000) // 1000
-    print(cm,cs, "/", lm, ls)
-    app.after(1000, display_time)
-
-display_time()
-
+    if not is_paused:
+        length = player.get_length()
+        current_time = player.get_time()
+        cm = current_time // 60000
+        cs = (current_time % 60000) // 1000
+        lm  = length // 60000
+        ls = (length % 60000) // 1000
+        print(cm,":",cs, "/", lm,":",ls)
+        app.after(1000, display_time)
 
 #menu elements 
 add_folder_menu = Menu(menu_bar, tearoff=FALSE)
@@ -202,5 +203,5 @@ volume_increase_button.pack()
 #volume decrease button
 volume_decrease_button = Button(control_frame, text = "volume--", command = volume_decrease)
 volume_decrease_button.pack()
-
+check_music_end()
 app.mainloop()
